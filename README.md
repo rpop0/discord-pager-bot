@@ -30,3 +30,5 @@ DISPATCH_DB_NAME=<DB-NAME>
 
 ### Final words
 If you wish to use this, the bot messages and embeds are written in Romanian, so you need to translate them.
+
+LICENSED UNDER GNU General Public License v3.0
