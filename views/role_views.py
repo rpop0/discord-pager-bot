@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 
 import discord
 
@@ -60,6 +61,10 @@ class AddRoleDropdown(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
         role_name = self.values[0]
+        user = interaction.user
+        if not re.search(r"([A-Z][a-z]+[ ][a-zA-Z'-]+)", user.display_name):
+            await interaction.response.send_message(f"Te rog seteaza numele.", ephemeral=True)
+            return
         if discord.utils.get(interaction.user.roles, name=role_name):
             await interaction.response.send_message(f"Ai deja rolul **{role_name}**. Pentru a scoate acest rol, "
                                                     f"foloseste butonul **Scoate un rol**", ephemeral=True)
@@ -72,7 +77,7 @@ class AddRoleDropdown(discord.ui.Select):
                                                      "/941665577238421544/DISPATCH_CENTER.png")
         embed.set_footer(text="Pentru a accepta sau respinge o cerere, folosește unul dintre butoanele de mai jos.")
 
-        embed.add_field(name="Nume ", value=f"{interaction.user.name}", inline=False)
+        embed.add_field(name="Nume ", value=f"{user.mention}", inline=False)
         embed.add_field(name="Data", value=f"{datetime.now().strftime('%m/%b/%Y, %H:%M:%S')}", inline=False)
         await channel.send(" ", embed=embed, view=ApproveRoleButton(interaction, self.values[0]))
         await interaction.response.send_message(f"Cererea ta a fost trimisă către {self.values[0]} Command. Așteaptă "
